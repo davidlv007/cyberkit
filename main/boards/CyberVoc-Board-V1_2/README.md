@@ -26,5 +26,6 @@ python scripts/release.py CyberVoc-Board-V1_2
 
 ## 参考
 
+- 原理图：`docs/原理图/1.2/`（`V1.2-主控板.pdf`、`V1.2-电源板.pdf`、`V1.2-麦克风板.pdf`）
 - 根目录 `README.md`：项目总体说明、编译/烧录流程、License 与上游声明
 

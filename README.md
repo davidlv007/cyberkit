@@ -169,7 +169,7 @@ V2_1 的主麦克风接在 ES7210 的 MIC2（TDM slot 2），与 V2_0 读取的 
     - `CyberVoc-Board-V2_1/`
     - `common/`：通用板级抽象/复用（WiFi/4G/双网等）
 - `components/`：工程依赖组件（含第三方组件与自研组件）
-- `docs/`：协议/使用/扩展文档（如 MCP、WebSocket/MQTT 等）
+- `docs/`：文档与硬件资料（见下文“文档说明”）
 - `scripts/`：构建/资源转换/发布脚本
 - `partitions/`：分区表相关
 
@@ -178,7 +178,22 @@ V2_1 的主麦克风接在 ES7210 的 MIC2（TDM slot 2），与 V2_0 读取的 
 - `main/boards/CyberVoc-Board-V1_2/README.md`
 - `main/boards/CyberVoc-Board-V2_0/README.md`
 - `main/boards/CyberVoc-Board-V2_1/README.md`
-- `docs/custom-board.md`（上游风格的板级扩展说明）
+- `docs/v1/custom-board.md`（上游风格的板级扩展说明）
+
+### 文档说明（`docs/`）
+
+- `docs/原理图/`：各硬件版本原理图，每个版本包含主控板、电源板、麦克风板三份 PDF
+  - `1.2/`：V1.2（对应 `CyberVoc-Board-V1_2`）
+  - `2.0/`：V2.0（对应 `CyberVoc-Board-V2_0`）
+  - `2.1/`：V2.1（对应 `CyberVoc-Board-V2_1`）
+- `docs/v1/`：通信协议与扩展文档（沿用上游）
+  - `mqtt-udp.md`：MQTT + UDP 混合通信协议（当前对接的服务器下发的即此协议）
+  - `websocket.md`：WebSocket 通信协议
+  - `mcp-protocol.md` / `mcp-usage.md`：MCP 设备控制协议的交互流程与用法
+  - `custom-board.md`：新增自定义板级的步骤说明
+- `docs/v0/`：README 等使用的图片资源
+
+> 修改板级引脚、音频通道等硬件相关代码前，请先对照 `docs/原理图/` 中对应版本的原理图。
 
 ---
 

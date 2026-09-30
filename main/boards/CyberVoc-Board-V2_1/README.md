@@ -93,4 +93,5 @@ idf.py -p /dev/ttyUSB0 flash monitor
 
 ## 参考
 
+- 原理图：`docs/原理图/2.1/`（`V2.1-主控板.pdf`、`V2.1-电源板.pdf`、`V2.1-麦克风板.pdf`）
 - 根目录 `README.md`：项目总体说明、编译/烧录流程、License 与上游声明
