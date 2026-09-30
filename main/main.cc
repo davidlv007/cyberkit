@@ -13,6 +13,8 @@
 
 #if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
 #include "boards/CyberVoc-Board-V2_0/config.h"
+#elif CONFIG_BOARD_TYPE_CYBERVOC_V2_1
+#include "boards/CyberVoc-Board-V2_1/config.h"
 #endif
 
 #define TAG "main"
@@ -20,7 +22,7 @@
 
 #define MEMORY_MONITOR 0
 
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
 static void LatchCyberVocPowerEarly()
 {
     gpio_config_t io_conf = {};
@@ -30,7 +32,12 @@ static void LatchCyberVocPowerEarly()
     io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     gpio_config(&io_conf);
+#if defined(PG2_POWER_OFF_PULSE_MS)
+    // Pulse-style power switch: an active PG2 level cuts power, keep it inactive.
+    gpio_set_level(PG2_HOLD_GPIO, !PG2_HOLD_ACTIVE_LEVEL);
+#else
     gpio_set_level(PG2_HOLD_GPIO, PG2_HOLD_ACTIVE_LEVEL);
+#endif
 }
 #endif
 
@@ -186,7 +193,7 @@ static void sys_monitor_start(void)
 
 extern "C" void app_main(void)
 {
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
     LatchCyberVocPowerEarly();
 #endif
 

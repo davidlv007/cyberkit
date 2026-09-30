@@ -118,7 +118,7 @@ public:
     void SetAfeDataProcessedCallback(std::function<void(const int16_t* audio_data, size_t total_bytes)> callback);
     void SetVadStateChangeCallback(std::function<void(bool speaking)> callback);
     void SetAudioDataProcessedCallback(std::function<void(const int16_t* audio_data, size_t bytes_per_channel, size_t channels)> callback);
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
     /** Switch ES7210 and rebuild AFE between MR (AEC) and MM (dual-mic DOA). */
     bool ReconfigureCaptureProfile(bool doa_capture);
 #endif

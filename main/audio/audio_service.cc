@@ -7,7 +7,7 @@
 #include <esp_log.h>
 #include <cstring>
 
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
 #include "codecs/box_audio_codec.h"
 #endif
 
@@ -953,7 +953,7 @@ void AudioService::SetAudioDataProcessedCallback(std::function<void(const int16_
     ESP_LOGI(TAG, "Audio data processed callback registered");
 }
 
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
 bool AudioService::ReconfigureCaptureProfile(bool doa_capture) {
     std::lock_guard<std::mutex> profile_lock(capture_profile_mutex_);
     if (codec_ == nullptr || audio_processor_ == nullptr) {

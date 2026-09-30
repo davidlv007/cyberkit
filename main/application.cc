@@ -31,6 +31,9 @@
   #ifdef CONFIG_BOARD_TYPE_CYBERVOC_V2_0
   #include "boards/CyberVoc-Board-V2_0/audio_analysis.h"
   #include "boards/CyberVoc-Board-V2_0/CyberVoc.h"
+  #elif defined(CONFIG_BOARD_TYPE_CYBERVOC_V2_1)
+  #include "boards/CyberVoc-Board-V2_1/audio_analysis.h"
+  #include "boards/CyberVoc-Board-V2_1/CyberVoc.h"
   #else
   #include "boards/CyberVoc-Board-V1_2/audio_analysis.h"
   #include "boards/CyberVoc-Board-V1_2/CyberVoc.h"

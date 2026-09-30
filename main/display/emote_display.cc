@@ -33,6 +33,8 @@
 #include "libs/qrcode/lv_qrcode.h"
 #ifdef CONFIG_BOARD_TYPE_CYBERVOC_V2_0
 #include "boards/CyberVoc-Board-V2_0/ui_bridge.h"
+#elif defined(CONFIG_BOARD_TYPE_CYBERVOC_V2_1)
+#include "boards/CyberVoc-Board-V2_1/ui_bridge.h"
 #else
 #include "boards/CyberVoc-Board-V1_2/ui_bridge.h"
 #endif
@@ -56,6 +58,12 @@
   #include "boards/CyberVoc-Board-V2_0/assets/number_14/number_14.h"
   #include "boards/CyberVoc-Board-V2_0/audio_analysis.h"
   #include "boards/CyberVoc-Board-V2_0/CyberVoc.h"
+  #elif defined(CONFIG_BOARD_TYPE_CYBERVOC_V2_1)
+  #include "boards/CyberVoc-Board-V2_1/assets/power/power.h"
+  #include "boards/CyberVoc-Board-V2_1/assets/power/charge.h"
+  #include "boards/CyberVoc-Board-V2_1/assets/number_14/number_14.h"
+  #include "boards/CyberVoc-Board-V2_1/audio_analysis.h"
+  #include "boards/CyberVoc-Board-V2_1/CyberVoc.h"
   #else
   #include "boards/CyberVoc-Board-V1_2/assets/power/power.h"
   #include "boards/CyberVoc-Board-V1_2/assets/power/charge.h"

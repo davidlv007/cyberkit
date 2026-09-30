@@ -2,10 +2,11 @@
 
 ![CyberVoc](/docs/v0/cybervoc_pretty_bg.png)
 
-本仓库是基于开源项目 [`78/xiaozhi-esp32`](https://github.com/78/xiaozhi-esp32) 的工程框架进行裁剪与二次开发的固件工程，**仅保留并维护**我们自己的两款硬件板级实现：
+本仓库是基于开源项目 [`78/xiaozhi-esp32`](https://github.com/78/xiaozhi-esp32) 的工程框架进行裁剪与二次开发的固件工程，**仅保留并维护**我们自己的硬件板级实现：
 
 - `main/boards/CyberVoc-Board-V1_2`
 - `main/boards/CyberVoc-Board-V2_0`
+- `main/boards/CyberVoc-Board-V2_1`
 
 如需完整的多开发板支持与更通用的工程能力，请参考上游项目。
 
@@ -25,14 +26,15 @@
 
 ## 支持的硬件
 
-本仓库仅保证以下两款硬件的可用性：
+本仓库仅保证以下硬件的可用性：
 
 - **CyberVoc-Board-V1_2**：`main/boards/CyberVoc-Board-V1_2`
 - **CyberVoc-Board-V2_0**：`main/boards/CyberVoc-Board-V2_0`
+- **CyberVoc-Board-V2_1**：`main/boards/CyberVoc-Board-V2_1`
 
 烧录时可按开关机按键行为区分板级：
 
-- 开机后烧录程序时，不需要一直按住开关机按键即可正常烧录的是 `main/boards/CyberVoc-Board-V1_2`
+- 开机后烧录程序时，不需要一直按住开关机按键即可正常烧录的是 `main/boards/CyberVoc-Board-V1_2` 或 `main/boards/CyberVoc-Board-V2_1`（V2_1 为长按 1.5s 关机，并带说话指示灯）
 - 烧录程序时，需要一直按住开关机按键才能正常烧录的是 `main/boards/CyberVoc-Board-V2_0`
 
 对应的板级配置在各自目录下的 `config.h` / `config.json` 中。
@@ -53,6 +55,7 @@
 ```bash
 python scripts/release.py CyberVoc-Board-V1_2
 python scripts/release.py CyberVoc-Board-V2_0
+python scripts/release.py CyberVoc-Board-V2_1
 ```
 
 ---
@@ -80,6 +83,8 @@ idf.py set-target esp32s3
 python scripts/release.py CyberVoc-Board-V1_2
 # 或
 python scripts/release.py CyberVoc-Board-V2_0
+# 或
+python scripts/release.py CyberVoc-Board-V2_1
 ```
 
 脚本会读取 `config.json` 并追加对应的 `sdkconfig` 片段，然后完成构建与打包。
@@ -120,6 +125,7 @@ idf.py flash monitor
   - `boards/`：板级实现
     - `CyberVoc-Board-V1_2/`
     - `CyberVoc-Board-V2_0/`
+    - `CyberVoc-Board-V2_1/`
     - `common/`：通用板级抽象/复用（WiFi/4G/双网等）
 - `components/`：工程依赖组件（含第三方组件与自研组件）
 - `docs/`：协议/使用/扩展文档（如 MCP、WebSocket/MQTT 等）
@@ -129,6 +135,7 @@ idf.py flash monitor
 板级说明请优先阅读：
 
 - `main/boards/CyberVoc-Board-V2_0/README.md`
+- `main/boards/CyberVoc-Board-V2_1/README.md`
 - `docs/custom-board.md`（上游风格的板级扩展说明）
 
 ---
@@ -139,7 +146,7 @@ idf.py flash monitor
 
 - 上游：[`78/xiaozhi-esp32`](https://github.com/78/xiaozhi-esp32)
 
-我们在此基础上进行了**裁剪**（移除大量上游板级适配）与**板级定制开发**（仅保留 `CyberVoc-Board-V1_2` 与 `CyberVoc-Board-V2_0`）。
+我们在此基础上进行了**裁剪**（移除大量上游板级适配）与**板级定制开发**（仅保留 `CyberVoc-Board-V1_2`、`CyberVoc-Board-V2_0` 与 `CyberVoc-Board-V2_1`）。
 
 同时感谢 ESP-IDF、LVGL 及本工程所使用的各组件/库作者与贡献者。
 
@@ -157,5 +164,5 @@ idf.py flash monitor
 
 欢迎提交 Issue / PR。为便于维护：
 
-- 仅保证 `CyberVoc-Board-V1_2` 与 `CyberVoc-Board-V2_0` 的可用性与回归
+- 仅保证 `CyberVoc-Board-V1_2`、`CyberVoc-Board-V2_0` 与 `CyberVoc-Board-V2_1` 的可用性与回归
 - 变更请尽量保持板级差异收敛在各自 `main/boards/<board>/` 目录内

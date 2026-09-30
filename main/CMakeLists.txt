@@ -96,6 +96,13 @@ elseif(CONFIG_BOARD_TYPE_CYBERVOC_V2_0)
     set(DEFAULT_EMOJI_COLLECTION twemoji_64)
     set(BUILD_RESOLUTION "360_360")
     set(ASSETS_EXTERNAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/boards/CyberVoc-Board-V2_0/assets")
+elseif(CONFIG_BOARD_TYPE_CYBERVOC_V2_1)
+    set(BOARD_TYPE "CyberVoc-Board-V2_1")
+    set(BUILTIN_TEXT_FONT font_puhui_20_4)
+    set(BUILTIN_ICON_FONT font_awesome_20_4)
+    set(DEFAULT_EMOJI_COLLECTION twemoji_64)
+    set(BUILD_RESOLUTION "360_360")
+    set(ASSETS_EXTERNAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/boards/CyberVoc-Board-V2_1/assets")
 endif()
 
 file(GLOB_RECURSE BOARD_SOURCES

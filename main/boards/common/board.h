@@ -22,6 +22,8 @@
 #elifdef CONFIG_LANGUAGE_ZH_CN
   #ifdef CONFIG_BOARD_TYPE_CYBERVOC_V2_0
   #include "boards/CyberVoc-Board-V2_0/touch_sensor.h"
+  #elif defined(CONFIG_BOARD_TYPE_CYBERVOC_V2_1)
+  #include "boards/CyberVoc-Board-V2_1/touch_sensor.h"
   #else
   #include "boards/CyberVoc-Board-V1_2/touch_sensor.h"
   #endif

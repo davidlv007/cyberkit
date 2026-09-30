@@ -9,6 +9,14 @@
 
 #define TAG "BoxAudioCodec"
 
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_1
+// ES7210 TDM order is MIC1, MIC3, MIC2, MIC4. On V2_1 MIC2 is the working
+// microphone, MIC3 is the speaker loopback used as AEC reference, and MIC1
+// picks up almost nothing, so mic+ref capture reads slots 2/1 instead of 0/1.
+static constexpr size_t kMrMicTdmSlot = 2;
+static constexpr size_t kMrRefTdmSlot = 1;
+#endif
+
 BoxAudioCodec::BoxAudioCodec(void* i2c_master_handle, int input_sample_rate, int output_sample_rate,
     gpio_num_t mclk, gpio_num_t bclk, gpio_num_t ws, gpio_num_t dout, gpio_num_t din,
     gpio_num_t pa_pin, uint8_t es8311_addr, uint8_t es7210_addr, bool input_reference) {
@@ -206,13 +214,18 @@ bool BoxAudioCodec::OpenInputDeviceLocked() {
         .sample_rate = static_cast<uint32_t>(input_sample_rate_),
         .mclk_multiple = 0,
     };
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
     if (doa_capture_mode_) {
         // esp_codec_dev otherwise compacts only slots 0/1. DOA must inspect all
         // ES7210 slots because the two populated microphones vary by PCB wiring.
         fs.channel_mask |= ESP_CODEC_DEV_MAKE_CHANNEL_MASK(2) |
                            ESP_CODEC_DEV_MAKE_CHANNEL_MASK(3);
     }
+#endif
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_1
+    // MR mode needs slot 2 (microphone), which requires capturing the full TDM frame.
+    fs.channel_mask |= ESP_CODEC_DEV_MAKE_CHANNEL_MASK(2) |
+                       ESP_CODEC_DEV_MAKE_CHANNEL_MASK(3);
 #endif
 
     esp_err_t ret = esp_codec_dev_open(input_dev_, &fs);
@@ -230,7 +243,7 @@ bool BoxAudioCodec::OpenInputDeviceLocked() {
     AudioCodec::EnableInput(true);
     ESP_LOGI(TAG, "Input opened: mask=0x%x, rate=%" PRIu32 ", profile=%s",
              fs.channel_mask, fs.sample_rate,
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
              doa_capture_mode_ ? "DOA dual-mic" : "AEC mic+ref"
 #else
              "mic+ref"
@@ -292,7 +305,7 @@ int BoxAudioCodec::Read(int16_t* dest, int samples) {
         return 0;
     }
 
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
     if (doa_capture_mode_) {
         // Do not lock from idle ADC noise. A valid DOA utterance is already
         // gated near -55 dBFS, for which average absolute PCM is well above 32.
@@ -381,6 +394,27 @@ int BoxAudioCodec::Read(int16_t* dest, int samples) {
         return samples;
     }
 #endif
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_1
+    {
+        if ((samples % 2) != 0) {
+            ESP_LOGW(TAG, "MR read requires packed stereo samples, got %d", samples);
+            return 0;
+        }
+        const size_t frames = static_cast<size_t>(samples / 2);
+        tdm_read_buffer_.resize(frames * 4);
+        const esp_err_t ret = esp_codec_dev_read(input_dev_, tdm_read_buffer_.data(),
+                                                  tdm_read_buffer_.size() * sizeof(int16_t));
+        if (ret != ESP_OK) {
+            ESP_LOGW(TAG, "MR TDM read failed: %s", esp_err_to_name(ret));
+            return 0;
+        }
+        for (size_t frame = 0; frame < frames; ++frame) {
+            dest[frame * 2] = tdm_read_buffer_[frame * 4 + kMrMicTdmSlot];
+            dest[frame * 2 + 1] = tdm_read_buffer_[frame * 4 + kMrRefTdmSlot];
+        }
+        return samples;
+    }
+#endif
 
     const esp_err_t ret = esp_codec_dev_read(input_dev_, dest,
                                               static_cast<size_t>(samples) * sizeof(int16_t));
@@ -391,7 +425,7 @@ int BoxAudioCodec::Read(int16_t* dest, int samples) {
     return samples;
 }
 
-#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0
+#if CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1
 bool BoxAudioCodec::SetDoaCaptureMode(bool enable) {
     std::lock_guard<std::mutex> lock(data_if_mutex_);
     if (doa_capture_mode_ == enable && input_reference_ == !enable && input_channels_ == 2) {

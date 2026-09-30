@@ -125,7 +125,7 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
 #endif
 
     ESP_LOGI(TAG, "Initializing LVGL adapter, width:%d, height:%d", width_, height_);
-#if CONFIG_BOARD_TYPE_CYBERVOC || CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || \
+#if CONFIG_BOARD_TYPE_CYBERVOC || CONFIG_BOARD_TYPE_CYBERVOC_V2_0 || CONFIG_BOARD_TYPE_CYBERVOC_V2_1 || \
     CONFIG_BOARD_TYPE_CYBERVOC_EN || CONFIG_BOARD_TYPE_CYBERVOC_RU
     // Match Emote path: ESP32-S3 QSPI cannot DMA from PSRAM. A tall draw buffer
     // (or PSRAM+bounce) fragments internal DRAM and breaks I2S reopen for AFE.
