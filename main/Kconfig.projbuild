@@ -116,7 +116,7 @@ endchoice
 
 choice BOARD_TYPE
     prompt "Board Type"
-    default BOARD_TYPE_CYBERVOC_V2_0
+    default BOARD_TYPE_CYBERVOC_V2_1
     help
         Board type. 开发板类型
 

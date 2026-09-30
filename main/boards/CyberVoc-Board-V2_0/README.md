@@ -5,9 +5,15 @@
 ## 概览
 
 - **板级目录**：`main/boards/CyberVoc-Board-V2_0/`
+- **menuconfig 选项**：`Xiaozhi Assistant` → **Board Type** → `CyberVoc V2.0`（`CONFIG_BOARD_TYPE_CYBERVOC_V2_0`；工程默认板级为 V2_1，编译 V2_0 需手动切换）
 - **目标芯片**：ESP32-S3（见 `config.json`）
 - **网络能力**：双网络（Wi-Fi / ML307 4G），支持在部分状态下切换网络类型（具体以固件逻辑为准）
 - **显示与触摸**：圆形触摸屏（QSPI LCD + CST816S）
+- **电源**：PG2(GPIO7) 高电平自锁保持供电，PG1(GPIO16) 为开关机键（按下为低）
+- **烧录**：烧录全程需一直按住开关机键，否则中途会断电
+- **音频**：ES7210 采集，TDM slot 0 为麦克风、slot 1 为功放回采
+
+> 同系列的 V2_1 在电源方案、引脚和麦克风 slot 上均有差异，见 `main/boards/CyberVoc-Board-V2_1/README.md`。
 
 ## 编译（推荐脚本方式）
 
