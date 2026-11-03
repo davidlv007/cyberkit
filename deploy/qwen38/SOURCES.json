@@ -1,0 +1,29 @@
+{
+  "purpose": "Windows native llama.cpp + Qwen3.8-27B GGUF for shadow ranking only",
+  "host": "127.0.0.1",
+  "port": 8088,
+  "root": "D:\\AI\\qwen38",
+  "llama_cpp": {
+    "repo": "https://github.com/ggml-org/llama.cpp",
+    "tag": "b11146",
+    "version": "0.5.0-dev",
+    "commit": "7fe450e19",
+    "windows_cuda": "12.4",
+    "preferred_cuda_after_driver_upgrade": "13.4",
+    "driver_note": "RTX 5090 driver 576.88 initializes llama.cpp CUDA 12.4, but CUDA 13.4 returns ggml_cuda_init failed. Keep 12.4 until the NVIDIA driver is upgraded.",
+    "bin_url": "https://github.com/ggml-org/llama.cpp/releases/download/b11146/llama-b11146-bin-win-cuda-13.4-x64.zip",
+    "cudart_url": "https://github.com/ggml-org/llama.cpp/releases/download/b11146/cudart-llama-bin-win-cuda-13.4-x64.zip"
+  },
+  "model": {
+    "base": "Qwen/Qwen3.8-27B",
+    "repo": "unsloth/Qwen3.8-27B-GGUF",
+    "primary_file": "Qwen3.8-27B-UD-Q6_K.gguf",
+    "primary_bytes": 21983677344,
+    "primary_sha256": "c9c206812fbe4ac7b76a729e25928b63f2ae89d37f69da7a71c20aec763cd436",
+    "fallback_file": "Qwen3.8-27B-UD-Q5_K_M.gguf",
+    "fallback_bytes": 19771509664,
+    "fallback_sha256": "2de73110cb254cbf09b54b717578dadff12ef1194e7271527e68202f39ba4bfd",
+    "mmproj": false,
+    "context": 16384
+  }
+}
