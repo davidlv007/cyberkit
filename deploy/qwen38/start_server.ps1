@@ -27,8 +27,8 @@ $log = Join-Path $logDir "llama-server.log"
 
 Write-Host "runtime=$runtime"
 Write-Host "model=$model"
-Write-Host "listen=127.0.0.1:$Port"
+Write-Host "listen=0.0.0.0:$Port (LAN)"
 
 Set-Location $runtime
-$argLine = "-m `"$model`" --no-mmproj -ngl 999 -c $Context -ctk q8_0 -ctv q8_0 --jinja --reasoning-budget $ReasoningBudget --host 127.0.0.1 --port $Port --parallel 1"
+$argLine = "-m `"$model`" --no-mmproj -ngl 999 -c $Context -ctk q8_0 -ctv q8_0 --jinja --reasoning-budget $ReasoningBudget --host 0.0.0.0 --port $Port --parallel 1"
 cmd /c "llama-server.exe $argLine >> `"$log`" 2>&1"
