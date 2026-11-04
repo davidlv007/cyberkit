@@ -30,5 +30,5 @@ Write-Host "model=$model"
 Write-Host "listen=0.0.0.0:$Port (LAN)"
 
 Set-Location $runtime
-$argLine = "-m `"$model`" --no-mmproj -ngl 999 -c $Context -ctk q8_0 -ctv q8_0 --jinja --reasoning-budget $ReasoningBudget --host 0.0.0.0 --port $Port --parallel 1"
+$argLine = "-m `"$model`" --no-mmproj -ngl 999 -c $Context -ctk q8_0 -ctv q8_0 --jinja --reasoning-budget $ReasoningBudget --host 0.0.0.0 --port $Port --parallel 1 --alias qwen3.8-27b"
 cmd /c "llama-server.exe $argLine >> `"$log`" 2>&1"
