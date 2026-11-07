@@ -41,12 +41,9 @@ Ota::~Ota() {
 }
 
 std::string Ota::GetCheckVersionUrl() {
-    Settings settings("wifi", false);
-    std::string url = settings.GetString("ota_url");
-    if (url.empty()) {
-        url = CONFIG_OTA_URL;
-    }
-    return url;
+    // 局域网部署(写死):直连本机小智服务端的 OTA 接口,不再访问云端
+    // 该接口返回 websocket 配置与服务器时间,无激活流程,开机即可用
+    return "http://192.168.31.157:8003/xiaozhi/ota/";
 }
 
 std::unique_ptr<Http> Ota::SetupHttp() {

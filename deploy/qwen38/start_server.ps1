@@ -2,7 +2,8 @@ param(
     [string]$Root = "D:\AI\qwen38",
     [int]$Port = 8088,
     [int]$Context = 32768,
-    [int]$ReasoningBudget = 512
+    # 思考预算:0 = 完全关闭思考(直接作答);>0 = 允许思考但限制 token 数
+    [int]$ReasoningBudget = 0
 )
 
 $ErrorActionPreference = "Continue"
@@ -30,5 +31,5 @@ Write-Host "model=$model"
 Write-Host "listen=0.0.0.0:$Port (LAN)"
 
 Set-Location $runtime
-$argLine = "-m `"$model`" --no-mmproj -ngl 999 -c $Context -ctk q8_0 -ctv q8_0 --jinja --reasoning-budget $ReasoningBudget --host 0.0.0.0 --port $Port --parallel 1 --alias qwen3.8-27b"
+$argLine = "-m `"$model`" --no-mmproj -ngl 999 -c $Context -ctk q8_0 -ctv q8_0 --jinja --reasoning-budget $ReasoningBudget -fa on --no-reasoning-preserve --warmup --host 0.0.0.0 --port $Port --parallel 1 --alias qwen3.8-27b"
 cmd /c "llama-server.exe $argLine >> `"$log`" 2>&1"

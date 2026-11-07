@@ -44,7 +44,9 @@
 #define TAG "Application"
 
 static constexpr const char* kAudioSettingsNamespace = "audio";
-static constexpr const char* kAecModeSettingsKey = "aec_mode";
+// v2 版 key:旧固件首启会持久化无效的 kAecOff 默认值,换 key 让设备端 AEC
+// 新默认值生效;用户后续显式选择仍持久化在此 key 下。
+static constexpr const char* kAecModeSettingsKey = "aec_mode2";
 
 static char *more_emotion[] = {
     "book",
@@ -83,18 +85,18 @@ Application::Application()
 //     aec_mode_ = kAecOff;
 #endif
     Settings audio_settings(kAudioSettingsNamespace, true);
-    // Use -1 as a sentinel so the default-off value is persisted on first boot
-    // without overwriting a user's later AEC preference.
+    // Use -1 as a sentinel: first boot defaults to device-side AEC (enables
+    // realtime barge-in) and persists it; an explicit user choice is respected.
     int32_t saved_aec_mode = audio_settings.GetInt(kAecModeSettingsKey, -1);
     if (saved_aec_mode == static_cast<int32_t>(kAecOnDeviceSide)) {
         aec_mode_ = kAecOnDeviceSide;
     } else if (saved_aec_mode == static_cast<int32_t>(kAecOnServerSide)) {
         aec_mode_ = kAecOnServerSide;
-    } else {
+    } else if (saved_aec_mode == static_cast<int32_t>(kAecOff)) {
         aec_mode_ = kAecOff;
-        if (saved_aec_mode != static_cast<int32_t>(kAecOff)) {
-            audio_settings.SetInt(kAecModeSettingsKey, static_cast<int32_t>(kAecOff));
-        }
+    } else {
+        aec_mode_ = kAecOnDeviceSide;
+        audio_settings.SetInt(kAecModeSettingsKey, static_cast<int32_t>(kAecOnDeviceSide));
     }
     ESP_LOGI(TAG, "AEC mode loaded from NVS: %d", static_cast<int>(aec_mode_));
     

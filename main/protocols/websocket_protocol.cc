@@ -12,6 +12,13 @@
 
 #define TAG "WS"
 
+// ===== 局域网部署(写死) =====
+// 固件不再从 OTA 配置读取服务器地址,直连本机小智服务端。
+// 如需恢复云端配置,删除本宏并把 OpenAudioChannel 里的 url 改回 settings.GetString("url")。
+#define LOCAL_XIAOZHI_SERVER_URL "ws://192.168.31.157:8000/xiaozhi/v1/"
+// 协议版本必须为 1(裸 opus 帧):本地小智服务端 0.9.8 对 WebSocket 音频不加协议头直传
+#define LOCAL_XIAOZHI_PROTOCOL_VERSION 1
+
 WebsocketProtocol::WebsocketProtocol() {
     event_group_handle_ = xEventGroupCreate();
 }
@@ -80,13 +87,11 @@ void WebsocketProtocol::CloseAudioChannel() {
 }
 
 bool WebsocketProtocol::OpenAudioChannel() {
+    // 写死:直连局域网小智服务端,忽略 OTA 下发的 url/version
     Settings settings("websocket", false);
-    std::string url = settings.GetString("url");
+    std::string url = LOCAL_XIAOZHI_SERVER_URL;
     std::string token = settings.GetString("token");
-    int version = settings.GetInt("version");
-    if (version != 0) {
-        version_ = version;
-    }
+    version_ = LOCAL_XIAOZHI_PROTOCOL_VERSION;
 
     error_occurred_ = false;
 

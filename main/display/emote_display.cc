@@ -947,26 +947,19 @@ namespace emote
             }
         }
         // 更新电量
-        int battery_level;
-        bool charging, discharging;
+        int battery_level = 0;
+        bool charging = false, discharging = false;
         const char *icon = nullptr;
         if (board.GetBatteryLevel(battery_level, charging, discharging))
         {
-
-            if (battery_level <= 5)
+            // 低电量横幅已禁用(按需求去掉屏幕底部常驻的"电量低，请充电")。
+            // 原逻辑缺陷:只有 battery_level <= 5 时才更新弹窗,电量回升后从不隐藏,
+            // 且板级电量计 bq27220 在底座供电/无电池时读数常 <=5,导致横幅一直挂屏。
+            // 如需恢复提醒:在此按 battery_level <= 5 显示、电量回升时隐藏。
+            // 此处外层已持有 DisplayLockGuard,直接改可见性避免嵌套加锁。
+            if (low_battery_popup_ != nullptr && gfx_obj_get_visible(low_battery_popup_))
             {
-                if (charging)
-                {
-                    // gfx_label_set_text(low_battery_popup_, "低电量,先充电");
-                    btr_level = false;
-                    show_low_battery_popup(btr_level);
-                }
-                else
-                {
-                    btr_level = !btr_level;
-                    gfx_label_set_text(low_battery_popup_, Lang::Strings::BATTERY_NEED_CHARGE);
-                    show_low_battery_popup(btr_level);
-                }
+                gfx_obj_set_visible(low_battery_popup_, false);
             }
 
             if (charging)
