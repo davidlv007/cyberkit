@@ -30,6 +30,11 @@ bool AudioCodec::InputData(std::vector<int16_t>& data) {
 void AudioCodec::Start() {
     Settings settings("audio", false);
     output_volume_ = settings.GetInt("output_volume", output_volume_);
+    // 默认音量拉满:只覆盖内存值,启动阶段不写 NVS
+    // (之前在 Start() 里写 NVS 曾因 key 超长触发 ESP_ERROR_CHECK -> 循环重启)
+    if (output_volume_ < 100) {
+        output_volume_ = 100;
+    }
     if (output_volume_ <= 0) {
         ESP_LOGW(TAG, "Output volume value (%d) is too small, setting to default (10)", output_volume_);
         output_volume_ = 10;
