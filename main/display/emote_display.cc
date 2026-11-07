@@ -325,8 +325,11 @@ namespace emote
         gfx_emote_set_bg_color(engine_handle, GFX_COLOR_HEX(0x000000));
 
         g_obj_anim_eye = gfx_anim_create(engine_handle);
-        gfx_obj_align(g_obj_anim_eye, GFX_ALIGN_LEFT_MID, 10, 30);
-        gfx_anim_set_auto_mirror(g_obj_anim_eye, true);
+        // 官方表情素材为完整双眼画面(360x360 全幅),不再镜像:
+        // 原逻辑启用 auto_mirror 将半幅帧水平翻倍,会导致官方不对称细节(问号/音符)
+        // 被对称化,且半幅裁切破坏画面构图。改为完整帧直出 + 屏幕居中。
+        gfx_obj_align(g_obj_anim_eye, GFX_ALIGN_CENTER, 0, 0);
+        gfx_anim_set_auto_mirror(g_obj_anim_eye, false);
         gfx_obj_set_visible(g_obj_anim_eye, false);
 
         g_obj_label_toast = gfx_label_create(engine_handle);

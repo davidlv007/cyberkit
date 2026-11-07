@@ -800,7 +800,8 @@ void Application::MainEventLoop()
                        !aborted_ &&
                        audio_service_.IsVoiceDetected()) {
                 // Ignore early VAD — TTS echo often trips AEC for a few hundred ms.
-                constexpr int64_t kBargeInGraceUs = 500000;
+                // 500ms 会让人感觉打断迟钝;降到 300ms,若回声误触发自打断再调回
+                constexpr int64_t kBargeInGraceUs = 300000;
                 if (esp_timer_get_time() - speaking_entered_us_ >= kBargeInGraceUs) {
                     // Device-side barge-in: stop TTS immediately and keep uplink so
                     // the server can STT the utterance that interrupted playback.
